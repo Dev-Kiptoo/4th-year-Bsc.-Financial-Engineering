@@ -1,8 +1,14 @@
-plot(assignmentdf$Assignmentdata, type = "l", col = "darkblue", 
+Assignmentdata <- c(7.4, 0, 0.6, 3.4, 0, 0, 0.7, 1.5, 2.2,9.2, 6.9, 0, 2.9, 3, 
+                    1.3, 9.3, 22.8, 11.5, 129.8, 47.0, 17.2, 12.8, 3.2)
+years<- 1971:1993
+assignmentdf <- data.frame(Assignmentdata, years)
+length(years)
+plot(Assignmentdata, type = "l", col = "darkblue", 
      main = 'Plotting the Data', xlab = 'Years', ylab = "Annual loss")
 axis(1, at = seq_along(assignmentdf$years), labels = assignmentdf$years, cex.axis = 0.75)
 
-fit1 <- fevd(Assignmentdata, assignmentdf, units = "deg C")
+fit1 <- fevd(Assignmentdata, type='GEV')
+plot(fit1)
 distill_output <-distill(fit1)
 
 distillate <- as.data.frame(distill_output[c("location", "scale", "shape")])
@@ -39,6 +45,9 @@ calculate_var_gev <- function(alpha, location, scale, shape) {
   var_estimate <- location + (scale / shape) * ((-log(1 - alpha))^(-shape) - 1)
   return(var_estimate)
 }
+library(xts)
+
+var_5_percent <-qgev( 0.95, lc, sc, sl)
 
 # Example usage:
 alpha <- 0.05  # 95% confidence level
